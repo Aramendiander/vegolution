@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  mongo_vegolution:
+    image: mongo
+    container_name: mongo_vegolution
+    ports:
+      - ${DB_PORT}:27017
+    volumes:
+      - ./db/data:/data/db
