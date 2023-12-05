@@ -1,7 +1,8 @@
 import express from "express";
+import mongodb from "./src/config/mongodb.js";
 import dotenv from "dotenv";
 import session from "express-session";
-
+import productViewController from "./src/controllers/products/productViewController.js"
 import router from "./src/router/router.js";
 
 dotenv.config();
@@ -17,17 +18,26 @@ app.use(session({
     }
 }))
 
+
+const productos = async () => {
+    const products = await productViewController.getLastProducts();
+    console.log(products)
+    return products;
+}
+
+
 app.use(express.static("public"));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.get("/",(req,res)=>{
-    res.send("Hola");
+app.get("/", async (req,res)=>{
+    const products = await productos()
+    res.json(products)
 });
 
 app.use("/",router);
 
-app.listen(3006,()=>{
+app.listen(3000,()=>{
     console.log("servidor en marcha en el puerto 3006");
 });
