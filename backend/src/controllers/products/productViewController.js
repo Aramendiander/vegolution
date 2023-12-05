@@ -11,10 +11,24 @@ const getLastProducts = async (req, res) => {
     }
 }
 
+const getSingleProduct = async (req, res) => {
+    try {
+        const name = req.params.name
+        const products = await productController.getSingleProduct(name);
+        console.log(products)
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export {
     getLastProducts,
+    getSingleProduct,
 }
 
 export default {
     getLastProducts,
+    getSingleProduct,
 }

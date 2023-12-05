@@ -1,6 +1,6 @@
 import productModel from "../../models/productModel.js";
 
-const getLastProducts = async (req, res) => {
+const getLastProducts = async () => {
     try {
         const products = await productModel.find();
         
@@ -11,10 +11,23 @@ const getLastProducts = async (req, res) => {
     }
 }
 
+const getSingleProduct = async (name) => {
+    try {
+        const products = await productModel.findOne({name: name});
+
+        return products
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export {
     getLastProducts,
+    getSingleProduct,
 }
 
 export default {
     getLastProducts,
+    getSingleProduct,
 }
