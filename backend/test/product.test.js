@@ -1,5 +1,16 @@
 /* import productModel from "../src/models/productModel.js";
 
+const testProduct = async () => {
+    const product = productModel.find({name: 'Heura no pollo'});
+    console.log(product);
+    return product;
+}
+
+testProduct();
+ */
+
+/* import productModel from "../src/models/productModel.js";
+
 describe("Tests de modelo de producto",() =>{
     const name = "producto1";
     const shortdescription = "descripcion corta";

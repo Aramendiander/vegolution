@@ -1,18 +1,11 @@
 import connection from '../src/config/mongodb.js';
-import userModel from '../src/models/userModel.js';
+import productModel from '../src/models/productModel.js';
 
 
-const email = "mikel@mongo.com";
-const password = '1234';
-const createUser = async (email, password) => {
-    const newUser = new userModel({
-        email: email,
-        password: password,
-    });
-    console.log(newUser)
-    return await newUser.save();
+const findProducts = async () => {
+    const products = await productModel.find({name: 'Heura no pollo'});
+    console.log(products);
+    return products;
+}
 
-};
-
-const user = await createUser(email,password);
-console.log(user)
+findProducts();

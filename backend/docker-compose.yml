@@ -8,3 +8,14 @@ services:
       - ${DB_PORT}:27017
     volumes:
       - ./db/data:/data/db
+  node:
+    build: .
+    container_name: node_vegolution
+    restart: always
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo_vegolution
