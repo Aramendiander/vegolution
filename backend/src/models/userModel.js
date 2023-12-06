@@ -12,7 +12,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     email:String,
+    username: String,
     password:String,
+    reset: String,
+    role: String,
     carts: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
 });
 

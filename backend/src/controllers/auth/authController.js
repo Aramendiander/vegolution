@@ -1,24 +1,25 @@
-import User from "../models/user.js";
+import userModel from "../../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
 const register = async (req, res) => {
-    const {email,password,confirmPassword} = req.body;
-    console.log(req.body)
+
+    const {email,username,password,confirmPassword} = req.body;
+    const role = 'user';
+    const reset = null;
     try {
         if(password !== confirmPassword) {
             return res.status(400).json({message:"Passwords don't match"});
         }
-        let oldUser = await User.findOne({email});
-        console.log(oldUser);
-        if(oldUser) {
-            return res.status(400).json({message:"User already exists"});
+        let oldMail = await userModel.findOne({email});
+        if(oldMail) {
+            return res.status(400).json({message:"Mail already exists"});
         }
         let hashedPassword = await bcrypt.hash(password,12);
-        const result = await User.create({email,password:hashedPassword});
-        const token = jwt.sign({email:result.email,id:result._id},process.env.JWT_SECRET,{expiresIn:"1h"});
+        const result = await userModel.create({email:email,username:username,password:hashedPassword,reset:reset,role:role});
+        const token = jwt.sign({email:result.email},process.env.JWT_SECRET,{expiresIn:"1h"});
         res.status(200).json({email,token:token});
     } catch (error) {
         console.log(error);
@@ -29,7 +30,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const {email,password} = req.body;
     try {
-        let oldUser = await User.findOne({email});
+        let oldUser = await userModel.findOne({email});
         if(!oldUser) {
             return res.status(404).json({message:"User doesn't exist"});
         }
