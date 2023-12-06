@@ -4,10 +4,14 @@ import mongoose from "mongoose";
  */
 
 /**
- * Modelo de usuario para loguearse y poder hacer scraping
+ * User model for MongoDB User collection
  * @typedef {Object} UserModel
- * @property {String} email email único para cada usuario
- * @property {String} password hash de la contraseña del usuario
+ * @property {String} email Unique user identifier
+ * @property {String} password User password that will be hashed through bcrypt
+ * @property {String} username User's name (not unique, non-identifying)
+ * @property {String} reset Reset token for password reset
+ * @property {String} role User role (admin, user)
+ * @property {Object} carts User cart (array of products)
  */
 
 const userSchema = new mongoose.Schema({
@@ -16,7 +20,7 @@ const userSchema = new mongoose.Schema({
     password:String,
     reset: String,
     role: String,
-    carts: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
+    cart: Array
 });
 
 const userModel = mongoose.model("users",userSchema);
