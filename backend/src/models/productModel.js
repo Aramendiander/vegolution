@@ -5,7 +5,7 @@ import mongoose from "mongoose";
  */
 
 /**
- * Product model for ecommerce
+ * Product model for ecommerce products on MongoDB Product collection
  * @typedef {Object} productModel
  * @property {String} name Name of the product
  * @property {String} shortdescription Short description of the product

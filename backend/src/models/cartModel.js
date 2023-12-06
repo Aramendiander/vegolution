@@ -4,9 +4,9 @@ import mongoose from "mongoose";
  */
 
 /**
- * Modelo de usuario para loguearse y poder hacer scraping
+ * Cart model for MongoDB Cart collection
  * @typedef {Object} cartModel
- * @property {String} users email único para cada usuario
+ * @property {String} users email del usuario
  * @property {String} products hash de la contraseña del usuario
  */
 
