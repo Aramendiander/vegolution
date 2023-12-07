@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     password:String,
     reset: String,
     role: String,
-    cart: Array
+    cart: [{type: mongoose.Schema.Types.ObjectId, ref: 'products'}]
 });
 
 const userModel = mongoose.model("users",userSchema);

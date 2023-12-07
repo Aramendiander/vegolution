@@ -11,7 +11,7 @@ import mongoose from "mongoose";
  */
 
 const cartSchema = new mongoose.Schema({
-    users: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'products' }],
     active: Boolean,
     date: Date,
