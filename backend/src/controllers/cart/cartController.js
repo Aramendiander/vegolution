@@ -5,11 +5,9 @@ import cartModel from "../../models/cartModel.js";
 const cartController = {
 
     async getCart(req, res) {
-        console.log('hola')
         const email = req.body.email;
-        console.log(email)
         try {
-            const user = await userModel.findOne({ email: email }).populate('cart.product'); 
+            const user = await userModel.findOne({ email: email }).populate('cart.product');
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
@@ -61,32 +59,32 @@ const cartController = {
 
     async deleteFromCart(req, res) {
         try {
-            const { userId, productId } = req.params;
+            const { userId, productId } = req.query;
 
+            console.log(userId)
             const user = await userModel.findById(userId);
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
 
-            // Verificar si el producto está en el carrito del usuario
-            const cartItemIndex = user.cart.findIndex(item => String(item.product) === String(productId));
+            const isInCart = user.cart.some(item => String(item.product) === String(productId));
 
-            if (cartItemIndex !== -1) {
-                user.cart.splice(cartItemIndex, 1);
-                await user.save();
-
-                const updatedCart = await cartModel.findOneAndUpdate(
-                    { user: userId },
-                    { $pull: { products: productId } }, // Eliminar el producto del array de productos, se utiliza el método $pull en la consulta de Mongoose para eliminar el producto del array products en el modelo cartModel
-                    { new: true }
-                );
-
-                return res.json(updatedCart);
+            if (!isInCart) {
+                return res.status(404).json({ error: 'Producto no encontrado' });
             } else {
-                return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
+                const product = user.cart.find(item => String(item.product._id) === String(productId));
+                if (product) {
+                    user.cart.pull(product);
+                    await user.save();
+                    return res.json(product);
+                } else {
+                    return res.status(404).json({ error: 'Product not found in cart' });
+                }
             }
+
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            console.log(error)
+            return res.status(400).json({ error: error.message });
         }
     },
 };

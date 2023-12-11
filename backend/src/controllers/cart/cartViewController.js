@@ -14,8 +14,7 @@ const addToCart = async (req, res) => {
 const deleteFromCart = async (req, res) => {
     try {
         const name = req.params.name
-        const products = await cartController.deleteFromCart(name);
-        console.log(products)
+        const products = await cartController.deleteFromCart(req, res);
         return products;
     }
     catch(e){
