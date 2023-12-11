@@ -1,18 +1,36 @@
 import userModel from "../../models/userModel.js";
-import productModel from "../../models/userModel.js";
+import productModel from "../../models/productModel.js";
 import cartModel from "../../models/cartModel.js";
 
 const cartController = {
+
+    async getCart(req, res) {
+        console.log('hola')
+        const email = req.body.email;
+        console.log(email)
+        try {
+            const user = await userModel.findOne({ email: email }).populate('cart.product'); 
+            if (!user) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+            const userCart = user.cart
+            return res.json({ userCart });
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    },
+
+
     async addToCart(req, res) {
         try {
-            const { userId, productId, quantity } = req.body;
+            const { email, productId, quantity } = req.body;
 
-            const product = await productModel.findById(productId);
+            const product = await productModel.findOne({ _id: productId });
             if (!product) {
                 return res.status(404).json({ error: 'Producto no encontrado' });
             }
 
-            const user = await userModel.findById(userId);
+            const user = await userModel.findOne({ email: email });
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
@@ -22,36 +40,20 @@ const cartController = {
             if (isInCart) {
                 user.cart.forEach(item => {
                     if (String(item.product) === String(productId)) {
-                        item.quantity += quantity;
+                        item.quantity += parseInt(quantity);
                     }
                 });
             } else {
                 user.cart.push({
                     product: productId,
                     quantity: quantity,
-                    price: product.price
                 });
             }
 
             await user.save();
 
-            let updatedCart = await cartModel.findOne({ user: userId });
 
-            if (!updatedCart) {
-                updatedCart = await cartModel.create({ //si no hay carrito, se crea
-                    user: userId,
-                    products: [productId],
-                    active: true,
-                    date: new Date()
-                });
-            } else {
-                updatedCart.products.addToSet(productId);
-                updatedCart.active = true;
-                updatedCart.date = new Date();
-                await updatedCart.save();
-            }
-
-            return res.json(updatedCart);
+            return res.json(user.cart);
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }

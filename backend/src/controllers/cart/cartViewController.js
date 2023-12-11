@@ -2,8 +2,8 @@ import cartController from "./cartController.js";
 
 const addToCart = async (req, res) => {
 
-    try {
-        const products = await productController.getLastProducts();
+    try {   
+        const products = await cartController.addToCart(req,res);
         return products;
     }
     catch(e){
@@ -23,12 +23,25 @@ const deleteFromCart = async (req, res) => {
     }
 }
 
+
+const getCart = async (req, res) => {
+    try {
+        const products = await cartController.getCart(req, res);
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export {
     addToCart,
     deleteFromCart,
+    getCart,
 }
 
 export default {
     addToCart,
     deleteFromCart,
+    getCart,
 }

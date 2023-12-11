@@ -7,7 +7,7 @@ const router = Router();
 
 router.use("/",authRouter);
 
-router.use("/cart",authRouter);
+router.use("/cart",cartRouter);
 
 router.use("/product",productRouter);
 
