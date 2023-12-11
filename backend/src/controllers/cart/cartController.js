@@ -5,9 +5,9 @@ import cartModel from "../../models/cartModel.js";
 const cartController = {
 
     async getCart(req, res) {
-        const email = req.body.email;
+        const userId = req.query.userId;
         try {
-            const user = await userModel.findOne({ email: email }).populate('cart.product');
+            const user = await userModel.findOne({ _id: userId }).populate('cart.product');
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
@@ -59,7 +59,7 @@ const cartController = {
 
     async deleteFromCart(req, res) {
         try {
-            const { userId, productId } = req.query;
+            const { userId, productId } = req.body;
 
             console.log(userId)
             const user = await userModel.findById(userId);
@@ -87,6 +87,48 @@ const cartController = {
             return res.status(400).json({ error: error.message });
         }
     },
+
+    async purchase (req, res) {
+        try {
+            const { email } = req.body;
+            const user = await userModel.findOne({ email: email });
+            if (!user) {
+                return res.status(404).json({ error: 'Cart not found' });
+            }
+            const products = user.cart;
+            const historyCart = await cartModel.create({
+                user: user._id,
+                products: products,
+                active: false,
+                date: Date.now()
+            });
+            historyCart.save();
+            user.cart = [];
+            user.save()
+            res.json({ message: "Purchase completed" })
+
+        }
+        catch (e) {
+            console.log(e)
+            res.json({ message: "Error" })
+        }
+    },
+
+    async history (req, res) {
+        try {
+            const userId = req.query.userId;
+            const user = await userModel.findOne({ _id: userId });
+            if (!user) {
+                return res.status(404).json({ error: 'Cart not found' });
+            }
+            const history = await cartModel.find({ user: user._id });
+            res.json(history)
+        }
+        catch (e) {
+            console.log(e)
+            res.json({ message: "Error" })
+        }
+    }
 };
 
 export default cartController;

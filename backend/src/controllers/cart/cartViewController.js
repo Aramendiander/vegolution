@@ -24,8 +24,29 @@ const deleteFromCart = async (req, res) => {
 
 
 const getCart = async (req, res) => {
+    console.log('hola')
     try {
         const products = await cartController.getCart(req, res);
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+const purchase = async (req, res) => {
+    try {
+        const products = await cartController.purchase(req, res);
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+const history = async (req, res) => {
+    try {
+        const products = await cartController.history(req, res);
         return products;
     }
     catch(e){
@@ -37,10 +58,14 @@ export {
     addToCart,
     deleteFromCart,
     getCart,
+    purchase,
+    history,
 }
 
 export default {
     addToCart,
     deleteFromCart,
     getCart,
+    purchase,
+    history,
 }
