@@ -4,9 +4,11 @@ import dotenv from "dotenv";
 import session from "express-session";
 import productViewController from "./src/controllers/products/productViewController.js"
 import router from "./src/router/router.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -18,6 +20,10 @@ app.use(session({
     }
 }))
 
+
+app.use(cors({
+    origin:"http://localhost:5173"
+}))
 
 const productos = async () => {
     const products = await productViewController.getLastProducts();
