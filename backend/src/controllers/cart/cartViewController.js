@@ -1,9 +1,34 @@
-import express from "express";
-import cartController from "../controllers/cartController";
+import cartController from "./cartController.js";
 
-const router = express.Router();
+const addToCart = async (req, res) => {
 
-router.post("/add-to-cart", cartController.addToCart);
-router.delete("/delete-from-cart/:userId/:productId", cartController.deleteFromCart);
+    try {
+        const products = await productController.getLastProducts();
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
 
-export default router;
+const deleteFromCart = async (req, res) => {
+    try {
+        const name = req.params.name
+        const products = await cartController.deleteFromCart(name);
+        console.log(products)
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+export {
+    addToCart,
+    deleteFromCart,
+}
+
+export default {
+    addToCart,
+    deleteFromCart,
+}
