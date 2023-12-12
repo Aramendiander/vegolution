@@ -20,6 +20,7 @@ const productSchema = new mongoose.Schema({
     longdescription: String,
     picture: String,
     price: Number,
+    category: Array
 });
 
 const productModel = mongoose.model("products", productSchema);

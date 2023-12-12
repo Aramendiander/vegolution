@@ -4,8 +4,7 @@ import productViewController from "../controllers/products/productViewController
 
 const router = Router();
 
-
- router.get("/:category", async (req,res) => {
+router.get("/:category", async (req,res) => {
     const product = await productViewController.getByCategory(req,res)
     res.json(product)
  })
