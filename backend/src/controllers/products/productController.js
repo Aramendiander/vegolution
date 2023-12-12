@@ -14,7 +14,7 @@ const getLastProducts = async () => {
 const getSingleProduct = async (name) => {
     try {
         const products = await productModel.findOne({name: name});
-
+        console.log(products)
         return products
     }
     catch(e){

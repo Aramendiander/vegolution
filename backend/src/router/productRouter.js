@@ -5,8 +5,8 @@ import productViewController from "../controllers/products/productViewController
 const router = Router();
 
 
- router.get("/:category", async (req,res) => {
-    const product = await productViewController.getByCategory(req,res)
+ router.get("/:name", async (req,res) => {
+    const product = await productViewController.getSingleProduct(req,res)
     res.json(product)
  })
 
