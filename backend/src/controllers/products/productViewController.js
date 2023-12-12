@@ -23,12 +23,26 @@ const getSingleProduct = async (req, res) => {
     }
 }
 
+const getByCategory = async (req, res) => {
+
+    try {
+        const category = req.params.category
+        const products = await productController.getByCategory(category);
+        return products;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export {
     getLastProducts,
     getSingleProduct,
+    getByCategory,
 }
 
 export default {
     getLastProducts,
     getSingleProduct,
+    getByCategory,
 }

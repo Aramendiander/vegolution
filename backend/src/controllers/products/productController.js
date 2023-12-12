@@ -22,12 +22,25 @@ const getSingleProduct = async (name) => {
     }
 }
 
+const getByCategory = async (category) => {
+    
+    try {
+        const products = await productModel.find({category: category});
+        return products
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 export {
     getLastProducts,
     getSingleProduct,
+    getByCategory,
 }
 
 export default {
     getLastProducts,
     getSingleProduct,
+    getByCategory,
 }
