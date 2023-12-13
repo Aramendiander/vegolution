@@ -3,12 +3,13 @@ import productRouter from "./productRouter.js";
 import authRouter from "./authRouter.js";
 import cartRouter from "./cartRouter.js";
 import categoryRouter from "./categoryRouter.js";
+import { isAuthenticatedApi } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
 router.use("/",authRouter);
 
-router.use("/cart",cartRouter);
+router.use("/cart", isAuthenticatedApi ,cartRouter);
 
 router.use("/product",productRouter);
 

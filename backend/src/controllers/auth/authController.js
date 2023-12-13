@@ -20,8 +20,14 @@ const register = async (req, res) => {
         }
         let hashedPassword = await bcrypt.hash(password,12);
         const result = await userModel.create({email:email,username:username,password:hashedPassword,reset:reset,role:role,cart:cart});
-        const token = jwt.sign({email:result.email},process.env.JWT_SECRET,{expiresIn:"24h"});
-        res.status(200).json({email,token:token});
+        const token = jwt.sign({email:result.email, role:result.role},process.env.JWT_SECRET,{expiresIn:"24h"});
+        res.cookie("token",token,{
+            httpOnly:true,
+            secure:true,
+            sameSite:"none",
+            maxAge: 1000 * 60 * 10
+        });
+        res.json({token});
     } catch (error) {
         console.log(error);
         res.status(500).json({message:"Something went wrong"});
@@ -39,8 +45,14 @@ const login = async (req, res) => {
         if(!isPasswordCorrect) {
             return res.status(400).json({message:"Invalid credentials"});
         }
-        const token = jwt.sign({email:oldUser.email,id:oldUser._id},process.env.JWT_SECRET,{expiresIn:"24h"});
-        res.status(200).json({email,token:token});
+        const token = jwt.sign({email:oldUser.email,id:oldUser._id,role:oldUser.role},process.env.JWT_SECRET,{expiresIn:"24h"});
+        res.cookie("token",token,{
+            httpOnly:true,
+            secure:true,
+            sameSite:"none",
+            maxAge: 1000 * 60 * 10
+        });
+        res.json({token});
     }
     catch (error) {
     }
