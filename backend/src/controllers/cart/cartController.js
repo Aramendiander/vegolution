@@ -1,11 +1,18 @@
 import userModel from "../../models/userModel.js";
 import productModel from "../../models/productModel.js";
 import cartModel from "../../models/cartModel.js";
+import jwt from "jsonwebtoken";
 
 const cartController = {
 
     async getCart(req, res) {
         const userId = req.query.userId;
+        const cookie = req.headers.cookie;
+        const token = cookie.split("=")[1];
+        const {email, role, id} = jwt.verify(token,process.env.JWT_SECRET);
+        if (userId !== id && role !== 'admin') {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
         try {
             const user = await userModel.findOne({ _id: userId }).populate('cart.product');
             if (!user) {
@@ -58,6 +65,7 @@ const cartController = {
     },
 
     async deleteFromCart(req, res) {
+        
         try {
             const { userId, productId } = req.body;
 
@@ -115,6 +123,13 @@ const cartController = {
     },
 
     async history (req, res) {
+        const userId = req.query.userId;
+        const cookie = req.headers.cookie;
+        const token = cookie.split("=")[1];
+        const {email, role, id} = jwt.verify(token,process.env.JWT_SECRET);
+        if (userId !== id && role !== 'admin') {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
         try {
             const userId = req.query.userId;
             const user = await userModel.findOne({ _id: userId });
