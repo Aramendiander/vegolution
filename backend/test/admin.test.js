@@ -1,4 +1,5 @@
-/* import productModel from "../src/models/productModel.js";
+import adminController from "../src/controllers/admin/adminController.js";
+
 
 const testProduct = async () => {
     const product = productModel.find({name: 'Heura no pollo'});
@@ -7,7 +8,7 @@ const testProduct = async () => {
 }
 
 testProduct();
- */
+
 
 /* import productModel from "../src/models/productModel.js";
 
