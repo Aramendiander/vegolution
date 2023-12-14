@@ -41,9 +41,9 @@ describe("Tests de modelo de producto",() =>{
         const newlongdescription = 'new long description';
         const newpicture = "new picture";
         const newprice = 888;
-      /*   const newcategory = ['new test']; */
+        const newcategory = ['new test'];
         try {
-            const product = await adminController.editProduct(id, newname, newshortdescription, newlongdescription, newpicture, newprice);
+            const product = await adminController.editProduct(id, newname, newshortdescription, newlongdescription, newpicture, newprice, newcategory);
             expect(product).toHaveProperty("name");
             expect(product.name).toBe(newname);
             expect(product).toHaveProperty("shortdescription");

@@ -1,6 +1,6 @@
 import productModel from "../../models/productModel.js";
 
-// product crud
+
 const createProduct = async (name, shortdescription, longdescription, picture, price, category) => {
     try {
         const product = await productModel.create({
@@ -9,12 +9,12 @@ const createProduct = async (name, shortdescription, longdescription, picture, p
             longdescription: longdescription,
             picture: picture,
             price: price,
-            category: category // if category is a single value and you want to store it as an array
+            category: category
         });
         return product
     } catch (error) {
         console.log(error)
-        /* return res.status(500).json({ error: error.message }); */
+        return
     }
 };
 
@@ -33,7 +33,7 @@ const editProduct = async (id, name, shortdescription, longdescription, picture,
         return product
     } catch (error) {
         console.log(error)
-        /* return res.status(500).json({ error: error.message }); */
+        return
     }
 };
 
@@ -43,7 +43,7 @@ const removeProduct = async (id) => {
         return product
     } catch (error) {
         console.log(error)
-        /* return res.status(500).json({ error: error.message }); */
+        return
     }
 };
 

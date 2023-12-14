@@ -13,14 +13,26 @@ const createProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
-        const product = await adminController.editProduct(req.body);
+        const {id, name, shortdescription, longdescription, picture, price, category } = req.body;
+        const product = await adminController.editProduct(id, name, shortdescription, longdescription, picture, price, category);
         res.json({ product });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
 
+const removeProduct = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const product = await adminController.removeProduct(id);
+        res.json({ product });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export default {
     createProduct,
     editProduct,
+    removeProduct,
 };
