@@ -1,38 +1,54 @@
 import productModel from "../../models/productModel.js";
 
 // product crud
-const createProduct = async (req, res) => {
+const createProduct = async (name, shortdescription, longdescription, picture, price, category) => {
     try {
-        const { name, price, description, category, image } = req.body;
-        const product = new productModel({
-            name,
-            price,
-            description,
-            category,
-            image
+        const product = await productModel.create({
+            name: name,
+            shortdescription: shortdescription,
+            longdescription: longdescription,
+            picture: picture,
+            price: price,
+            category: category // if category is a single value and you want to store it as an array
         });
-        await product.save();
-        return res.json({ product });
+        return product
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.log(error)
+        /* return res.status(500).json({ error: error.message }); */
     }
 };
 
-const editProduct = async (req, res) => {
+
+const editProduct = async (id, name, shortdescription, longdescription, picture, price, category) => {
     try {
-        const { name, price, description, category, image } = req.body;
-        const product = await productModel.findByIdAndUpdate(req.params.id, {
-            name,
-            price,
-            description,
-            category,
-            image
-        });
+        const product = await productModel.findOneAndUpdate({_id: id}, {
+            name: name,
+            shortdescription: shortdescription,
+            longdescription: longdescription,
+            picture: picture,
+            price: price,
+            category: category,
+        }, { new: true });
         await product.save();
-        return res.json({ product });
+        return product
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.log(error)
+        /* return res.status(500).json({ error: error.message }); */
     }
 };
 
-export default adminController;
+const removeProduct = async (id) => {
+    try {
+        const product = await productModel.deleteOne({_id: id});
+        return product
+    } catch (error) {
+        console.log(error)
+        /* return res.status(500).json({ error: error.message }); */
+    }
+};
+
+export default {
+    createProduct,
+    editProduct,
+    removeProduct,
+};

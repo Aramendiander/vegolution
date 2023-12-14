@@ -1,122 +1,70 @@
 import adminController from "../src/controllers/admin/adminController.js";
+import productController from "../src/controllers/products/productController.js";
+import connection from "../src/config/mongodb.js";
 
 
-const testProduct = async () => {
-    const product = productModel.find({name: 'Heura no pollo'});
-    console.log(product);
-    return product;
-}
-
-testProduct();
-
-
-/* import productModel from "../src/models/productModel.js";
 
 describe("Tests de modelo de producto",() =>{
-    const name = "producto1";
-    const shortdescription = "descripcion corta";
-    const longdescription = 'descripcion larga';
-    const picture = "foto";
-    const price = 50;
+    let id = null;
 
     test("Crear un producto nuevo",async ()=>{
-        const createProduct = async (name,shortdescription,longdescription,picture,price) => {
-            const newProduct = new productModel({
-                name: name,
-                shortdescription: shortdescription,
-                longdescription: longdescription,
-                picture: picture,
-                price: price,
-            });
-    
-            return await newProduct.save();
-        };
-
-        const product = await createProduct(name, shortdescription, longdescription, picture, price);
-        expect(product).toHaveProperty("name");
-        expect(product.name).toBe(name);
+        const name = "producttest";
+        const shortdescription = "short test";
+        const longdescription = 'long test long test long test';
+        const picture = "test picture";
+        const price = 999;
+        const category = ['test'];
+        try {
+            const product = await adminController.createProduct(name, shortdescription, longdescription, picture, price, category);
+            id = product._id;
+            expect(product).toHaveProperty("name");
+            expect(product.name).toBe(name);
+            expect(product).toHaveProperty("shortdescription");
+            expect(product.shortdescription).toBe(shortdescription);
+            expect(product).toHaveProperty("longdescription");
+            expect(product.longdescription).toBe(longdescription);
+            expect(product).toHaveProperty("picture");
+            expect(product.picture).toBe(picture);
+            expect(product).toHaveProperty("price");
+            expect(product.price).toBe(price);
+            expect(product).toHaveProperty("category");
+        }
+        catch(e){
+            console.log(e)
+        }
     }) 
 
-    test("Conseguir todos los productos",async() =>{
-        const createProduct = async (name,shortdescription,longdescription,picture,price) => {
-            const newProduct = new productModel({
-                name: name,
-                shortdescription: shortdescription,
-                longdescription: longdescription,
-                picture: picture,
-                price: price,
-            });
-    
-            return await newProduct.save();
-        };
 
-        // Create some products
-        await createProduct(name, shortdescription, longdescription, picture, price);
-        await createProduct(name + '2', shortdescription, longdescription, picture, price);
+    test("editar un producto",async ()=>{
+        const newname = "new name";
+        const newshortdescription = "new short description";
+        const newlongdescription = 'new long description';
+        const newpicture = "new picture";
+        const newprice = 888;
+      /*   const newcategory = ['new test']; */
+        try {
+            const product = await adminController.editProduct(id, newname, newshortdescription, newlongdescription, newpicture, newprice);
+            expect(product).toHaveProperty("name");
+            expect(product.name).toBe(newname);
+            expect(product).toHaveProperty("shortdescription");
+            expect(product.shortdescription).toBe(newshortdescription);
+            expect(product).toHaveProperty("longdescription");
+            expect(product.longdescription).toBe(newlongdescription);
+            expect(product).toHaveProperty("picture");
+            expect(product.picture).toBe(newpicture);
+            expect(product).toHaveProperty("price");
+            expect(product.price).toBe(newprice);
+            expect(product).toHaveProperty("category");
+        }
+        catch(e){
+            console.log(e)
+        }
+    }) 
 
-        const products = await productModel.find();
-        expect(products.length).toBeGreaterThan(0);
-        expect(products[0]).toHaveProperty("name");
-        expect(products[0]).toHaveProperty("shortdescription");
-        expect(products[0]).toHaveProperty("longdescription");
-        expect(products[0]).toHaveProperty("picture");
-        expect(products[0]).toHaveProperty("price");
+    test("eliminar un producto",async ()=>{
+        const product = await adminController.removeProduct(id);
+        const deletedProduct = await productController.getProductById(id);
+        expect(deletedProduct).toBe(null);
     })
+
 })
-    /* test("Conseguir un producto por ID", async () => {
-        const producto = await productModel.findOne({
-            where: {
-                id: id
-            }
-        })
-        expect(producto).not.toBeUndefined();
-        expect(producto).not.toBeNull();
-        expect(producto.title).toEqual(title);
-        expect(producto.description).toEqual(description);
-        expect(producto.picture).toEqual(picture);
-        expect(producto.price).toEqual(price);
-        expect(producto.id_category).toEqual(id_category);
-
-    })
-
-    test("Editar un producto por ID", async () => {
-        const product = await productModel.findOne({
-            where: {
-                id: id
-            }
-        })
-        product.title="Panchineta"
-        product.description="esto está editado"
-        product.picture="imagen"
-        product.price=12
-        product.id_category=1
-        await product.save();
-        const newProduct = await productModel.findOne({
-            where: {
-                id: id
-            }
-        })
-        expect(newProduct).not.toBeUndefined();
-        expect(newProduct).not.toBeNull();
-        expect(newProduct.title).toEqual("Panchineta");
-        expect(newProduct.description).toEqual("esto está editado");
-        expect(newProduct.picture).toEqual("imagen");
-        expect(newProduct.price).toEqual(12);
-        expect(newProduct.id_category).toEqual(1);
-
-    })
-    
-    test("Borrar producto por iD", async() => {
-        await productModel.destroy({
-            where: {
-                id: id
-            }
-        });
-        const oldProduct = await productModel.findOne({
-            where: {
-                id: id
-            }
-        });
-        expect(oldProduct).toBeNull()
-    })  */
- 
