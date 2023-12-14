@@ -21,6 +21,16 @@ const getSingleProduct = async (name) => {
     }
 }
 
+const getProductById = async (id) => {
+    try {
+        const products = await productModel.findOne({_id: id});
+        return products
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 const getByCategory = async (category) => {
     
     try {
@@ -36,10 +46,12 @@ export {
     getLastProducts,
     getSingleProduct,
     getByCategory,
+    getProductById,
 }
 
 export default {
     getLastProducts,
     getSingleProduct,
     getByCategory,
+    getProductById,
 }
