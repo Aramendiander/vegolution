@@ -11,4 +11,8 @@ router.post("/login", (req,res) => {
     authController.login(req,res)
 })
 
+router.post("/forgot-password", (req,res) => {
+    authController.forgotPassword(req,res)
+})
+
 export default router;

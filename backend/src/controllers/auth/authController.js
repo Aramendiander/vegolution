@@ -58,7 +58,40 @@ const login = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res) => {
+    try {
+        const {email,reset, newPassword, confirmPassword} = req.body;
+        if(!email) {
+            return res.status(400).json({message:"Email is required"});
+        }
+        if(!reset) {
+            return res.status(400).json({message:"Reset password is required"});
+        }
+        if(newPassword !== confirmPassword) {
+            return res.status(400).json({message:"Passwords don't match"});
+        }
+        const user = await userModel.findOne({email,reset});
+        if(!user) {
+            return res.status(400).json({message:"Invalid credentials"});
+        }
+        const hashedPassword = await bcrypt.hash(newPassword,12);
+        await userModel.findByIdAndUpdate(user._id,{ password:hashedPassword });
+        res.status(200).json({
+            succes:true,
+            message:"Password changed successfully"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            succes:false,
+            message:"Something went wrong",
+            error
+        })
+    }
+}
+
 export default{
     register,
-    login
+    login,
+    forgotPassword
 }
