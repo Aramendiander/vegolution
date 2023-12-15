@@ -2,6 +2,7 @@ import userModel from "../../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import {isEmailValidated,isPasswordSecure} from "../../utils/validations.js";
 dotenv.config();
 
 const register = async (req, res) => {
@@ -11,9 +12,19 @@ const register = async (req, res) => {
     const reset = null;
     const cart = [];
     try {
+        if (!isEmailValidated(email)) {
+            return res.status(400).json({message:"Invalid email"});
+        }
+        
         if(password !== confirmPassword) {
             return res.status(400).json({message:"Passwords don't match"});
         }
+
+        if (!isPasswordSecure(password)) {
+            return res.status(400).json({message:"Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"});
+        }
+
+
         let oldMail = await userModel.findOne({email});
         if(oldMail) {
             return res.status(400).json({message:"Mail already exists"});
