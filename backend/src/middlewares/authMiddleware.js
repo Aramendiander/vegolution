@@ -21,6 +21,9 @@ const isAuthenticatedApi = (req,res,next) =>{
     try{
     console.log("cookies",req.headers.cookie);
     const cookie = req.headers.cookie;
+    if (!cookie) {
+        return res.status(401).json({error:"authentication failed" });
+    }
     const token = cookie.split("=")[1];
     console.log("token",token);
 

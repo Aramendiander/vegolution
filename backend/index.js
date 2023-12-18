@@ -28,7 +28,6 @@ app.use(cors({
 
 const productos = async () => {
     const products = await productViewController.getLastProducts();
-    console.log(products)
     return products;
 }
 

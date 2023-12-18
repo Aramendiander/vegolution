@@ -24,7 +24,6 @@ const deleteFromCart = async (req, res) => {
 
 
 const getCart = async (req, res) => {
-    console.log('hola')
     try {
         const products = await cartController.getCart(req, res);
         return products;
