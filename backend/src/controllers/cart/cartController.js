@@ -8,7 +8,7 @@ const cartController = {
     async getCart(req, res) {
         const cookie = req.headers.cookie;
         const token = cookie.split("=")[1];
-        const {id} = jwt.verify(token,process.env.JWT_SECRET);
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
         try {
             const user = await userModel.findOne({ _id: id }).populate('cart.product');
             if (!user) {
@@ -61,12 +61,15 @@ const cartController = {
     },
 
     async deleteFromCart(req, res) {
-        
-        try {
-            const { userId, productId } = req.body;
 
-            console.log(userId)
-            const user = await userModel.findById(userId);
+        try {
+            const { productId } = req.body;
+            const cookie = req.headers.cookie;
+            const token = cookie.split("=")[1];
+            const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
+            console.log(id)
+            const user = await userModel.findById(id);
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
@@ -92,10 +95,12 @@ const cartController = {
         }
     },
 
-    async purchase (req, res) {
+    async purchase(req, res) {
         try {
-            const { email } = req.body;
-            const user = await userModel.findOne({ email: email });
+            const cookie = req.headers.cookie;
+            const token = cookie.split("=")[1];
+            const { id } = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await userModel.findOne({ _id: id });
             if (!user) {
                 return res.status(404).json({ error: 'Cart not found' });
             }
@@ -118,21 +123,21 @@ const cartController = {
         }
     },
 
-    async history (req, res) {
-        const userId = req.query.userId;
+    async history(req, res) {
         const cookie = req.headers.cookie;
         const token = cookie.split("=")[1];
-        const {email, role, id} = jwt.verify(token,process.env.JWT_SECRET);
-        if (userId !== id && role !== 'admin') {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
         try {
             const userId = req.query.userId;
-            const user = await userModel.findOne({ _id: userId });
+            const user = await userModel.findOne({ _id: id });
             if (!user) {
                 return res.status(404).json({ error: 'Cart not found' });
             }
-            const history = await cartModel.find({ user: user._id });
+            const history = await cartModel.find({ user: user._id }).populate({
+                path: 'products.product',
+                model: 'products'
+            });
             res.json(history)
         }
         catch (e) {
