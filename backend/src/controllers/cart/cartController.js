@@ -23,15 +23,18 @@ const cartController = {
 
 
     async addToCart(req, res) {
+        const cookie = req.headers.cookie;
+        const token = cookie.split("=")[1];
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
         try {
-            const { email, productId, quantity } = req.body;
+            const { productId, quantity } = req.body;
 
             const product = await productModel.findOne({ _id: productId });
             if (!product) {
                 return res.status(404).json({ error: 'Producto no encontrado' });
             }
 
-            const user = await userModel.findOne({ email: email });
+            const user = await userModel.findOne({ _id: id });
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
